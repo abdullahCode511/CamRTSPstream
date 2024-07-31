@@ -2,6 +2,7 @@ from flask import Flask, render_template, Response
 import cv2
 from flask_cors import CORS
 import threading
+import time
 
 app = Flask(__name__)
 CORS(app)
@@ -13,8 +14,9 @@ streams = {
 }
 
 class VideoStream:
-    def __init__(self, url):
+    def __init__(self, url, fps=10):
         self.url = url
+        self.fps = fps
         self.capture = cv2.VideoCapture(url)
         self.capture.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'H264'))
         self.latest_frame = None
@@ -29,11 +31,12 @@ class VideoStream:
                 frame = cv2.resize(frame, (640, 480))
                 with self.lock:
                     self.latest_frame = frame
+            time.sleep(1 / self.fps)  # Control the frame rate
 
     def get_frame(self):
         with self.lock:
             if self.latest_frame is not None:
-                ret, buffer = cv2.imencode('.jpg', self.latest_frame)
+                ret, buffer = cv2.imencode('.jpg', self.latest_frame, [int(cv2.IMWRITE_JPEG_QUALITY), 70])  # Reduce JPEG quality to 70
                 return buffer.tobytes()
             else:
                 return None

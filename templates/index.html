@@ -1,14 +1,13 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Video Streaming</title>
-  </head>
-  <body>
-    <h1>RTSP Video Stream</h1>
-    <img src="{{ url_for('video_feed', stream_id='stream1') }}" width="640" height="480">
-    <h1>RTSP Video Stream 2</h1>
-    <img src="{{ url_for('video_feed', stream_id='stream2') }}" width="640" height="480">
-  </body>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Streams</title>
+</head>
+<body>
+    <h1>Available Streams</h1>
+    <ul>
+        <li><a href="/embed/stream1">Stream 1</a></li>
+        <li><a href="/embed/stream2">Stream 2</a></li>
+    </ul>
+</body>
 </html>

@@ -10,15 +10,14 @@ CORS(app)
 # Dictionary to hold multiple video streams
 streams = {
     "stream1": "rtsp://admin:huem92000@10.5.50.247:554/Streaming/Channels/101",
-    "stream2": "rtsp://admin:huem92000@10.5.50.248:554/Streaming/Channels/101"  # Example additional stream
+    "stream2": "rtsp://admin:huem92000@10.5.50.191:554/Streaming/Channels/101"
 }
 
 class VideoStream:
-    def __init__(self, url, fps=10):
+    def __init__(self, url, fps=35):
         self.url = url
         self.fps = fps
         self.capture = cv2.VideoCapture(url)
-        self.capture.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'H264'))
         self.latest_frame = None
         self.lock = threading.Lock()
         self.thread = threading.Thread(target=self.update_frames, daemon=True)
@@ -36,7 +35,7 @@ class VideoStream:
     def get_frame(self):
         with self.lock:
             if self.latest_frame is not None:
-                ret, buffer = cv2.imencode('.jpg', self.latest_frame, [int(cv2.IMWRITE_JPEG_QUALITY), 70])  # Reduce JPEG quality to 70
+                ret, buffer = cv2.imencode('.jpg', self.latest_frame, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
                 return buffer.tobytes()
             else:
                 return None
